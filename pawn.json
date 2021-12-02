@@ -1,0 +1,9 @@
+{
+	"user": "Kirima2nd",
+	"repo": "bind-system",
+	"entry": "test.pwn",
+	"output": "test.amx",
+	"dependencies": [
+		"sampctl/samp-stdlib"
+	]
+}
