@@ -109,13 +109,13 @@ stock bool:Bind_Execute(playerid, PlayerBind:slot)
     return true;
 }
 
-stock Bind_Remove(playerid, PlayerBind:slot)
+stock bool:Bind_Remove(playerid, PlayerBind:slot)
 {
     g_sBindOccupied[playerid][slot] = false;
     g_sBindType[playerid][slot] = BIND_TYPE_NONE;
     g_sBindAction[playerid][slot][0] = EOS;
 
-    return 1;
+    return true;
 }
 
 static stock _Bind_FindFreeSlot(playerid)

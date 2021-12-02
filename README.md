@@ -41,7 +41,7 @@ forward bool:Bind_SetAction(playerid, PlayerBind:slot, const string:action[])
 // Core function
 forward PlayerBind:Bind_Create(playerid, E_BIND_TYPE:type, const string:action[])
 forward bool:Bind_Execute(playerid, PlayerBind:slot)
-forward Bind_Remove(playerid, PlayerBind:slot)
+forward bool:Bind_Remove(playerid, PlayerBind:slot)
 ```
 
 ## Usage
