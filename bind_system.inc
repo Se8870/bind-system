@@ -44,10 +44,11 @@ new
 
 stock void:Bind_GetSlots(playerid, PlayerBind:output[MAX_BIND])
 {
+    new slotCount = 0;
     for (new PlayerBind:i = PlayerBind:0; i < PlayerBind:MAX_BIND; i ++)
     {
         if (g_sBindOccupied[playerid][i])
-            output[_:i] = i;
+            output[slotCount++] = i; // Store at the previous count, then update the count.
     }
 }
 
