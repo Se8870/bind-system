@@ -12,8 +12,14 @@
 
 #define _INC_bind_system
 
-#define string: 
-#define void: 
+/*
+ *    NOTE:
+ *      These configuration below can be changed from your script.
+ *      Add it before including bind_system.inc.
+ *
+ *      Please do not edit it manually here, because you're not supposed to do that
+ *      and also these code below it's just default setting if you are not defining it.
+ */
 
 #if !defined MAX_BIND
     #define MAX_BIND                100
@@ -24,6 +30,16 @@
 #endif
 
 #define INVALID_BIND_ID PlayerBind:-1
+
+// Some configuration for older compiler.
+#define string: 
+#define void: 
+
+// Prepare strcopy just in case someone still using old include.
+#if !defined strcopy
+    stock strcopy(dest[], const string:source[], maxlength=sizeof dest)
+	    return strcat((dest[0] = EOS, dest), source, maxlength);
+#endif
 
 // Use this to make your own custom modification etc etc.
 forward Bind_OnCustomExecuted(playerid, PlayerBind:slot, const string:action[]);
@@ -136,6 +152,7 @@ static stock void:_Bind_ReProcess(playerid, PlayerBind:slot)
         case BIND_TYPE_COMMAND:
         {
             // using remote function to trigger command text.
+            // i think i need to just directly detects and call without using this, but maybe in another day.
             CallLocalFunction(#OnPlayerCommandText, "is", playerid, g_sBindAction[playerid][slot]);
         }
         case BIND_TYPE_CHAT:
