@@ -24,6 +24,9 @@ Callbacks:
 ```pawn
 // Called when you're using `BIND_TYPE_CUSTOM`
 forward Bind_OnCustomExecuted(playerid, PlayerBind:slot, const string:action[]);
+
+// Called when you set the key press
+forward Bind_OnKeyPressed(playerid, PlayerBind:slot, const string:action[]);
 ```
 
 Functions:
