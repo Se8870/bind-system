@@ -29,6 +29,10 @@
     #define MAX_BIND_MESSAGE        144
 #endif
 
+#if !defined NO_PLAYER_BIND_TAG
+    #define PlayerBind: 
+#endif
+
 #define INVALID_BIND_ID PlayerBind:-1
 
 // Some configuration for older compiler.
@@ -56,11 +60,10 @@ new
     bool:g_sBindOccupied[MAX_PLAYERS][PlayerBind:MAX_BIND],
     E_BIND_TYPE:g_sBindType[MAX_PLAYERS][PlayerBind:MAX_BIND],
     g_sBindKeys[MAX_PLAYERS][PlayerBind:MAX_BIND],
-    g_sBindName[MAX_PLAYERS][PlayerBind:MAX_BIND][MAX_BIND_MESSAGE],
     g_sBindAction[MAX_PLAYERS][PlayerBind:MAX_BIND][MAX_BIND_MESSAGE]
 ;
 
-stock PlayerBind:Bind_Create(playerid, const string:name[], E_BIND_TYPE:type, const string:action[])
+stock PlayerBind:Bind_Create(playerid, E_BIND_TYPE:type, const string:action[])
 {
     new PlayerBind:slot = PlayerBind:_Bind_FindFreeSlot(playerid);
 
@@ -70,7 +73,6 @@ stock PlayerBind:Bind_Create(playerid, const string:name[], E_BIND_TYPE:type, co
     g_sBindOccupied[playerid][slot] = true;
     g_sBindType[playerid][slot] = type;
 
-    strcopy(g_sBindName[playerid][slot], action, MAX_BIND_MESSAGE);
     strcopy(g_sBindAction[playerid][slot], action, MAX_BIND_MESSAGE);
 
     // Just to make sure if some scripter/player forgot to put `/`
@@ -88,21 +90,6 @@ stock void:Bind_GetSlots(playerid, PlayerBind:output[MAX_BIND])
         if (g_sBindOccupied[playerid][i])
             output[slotCount++] = i; // Store at the previous count, then update the count.
     }
-}
-
-stock bool:Bind_GetName(playerid, PlayerBind:slot, string:output[], len = sizeof(output))
-{
-    if (!g_sBindOccupied[playerid][slot])
-        return false;
-
-    strcopy(output, g_sBindName[playerid][slot], len);
-    return true;
-}
-
-stock bool:Bind_SetName(playerid, PlayerBind:slot, const string:name[])
-{
-    strcopy(g_sBindName[playerid][slot], action, MAX_BIND_MESSAGE);
-    return true;
 }
 
 stock E_BIND_TYPE:Bind_GetType(playerid, PlayerBind:slot)
@@ -150,7 +137,7 @@ stock bool:Bind_Execute(playerid, PlayerBind:slot)
     if (!g_sBindOccupied[playerid][slot])
         return false;
 
-    _Bind_ReProcess(playerid, PlayerBind:slot);
+    _Bind_ReProcess(playerid, slot);
     return true;
 }
 
