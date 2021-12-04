@@ -55,8 +55,30 @@ enum E_BIND_TYPE
 new
     bool:g_sBindOccupied[MAX_PLAYERS][PlayerBind:MAX_BIND],
     E_BIND_TYPE:g_sBindType[MAX_PLAYERS][PlayerBind:MAX_BIND],
+    g_sBindKeys[MAX_PLAYERS][PlayerBind:MAX_BIND],
+    g_sBindName[MAX_PLAYERS][PlayerBind:MAX_BIND][MAX_BIND_MESSAGE],
     g_sBindAction[MAX_PLAYERS][PlayerBind:MAX_BIND][MAX_BIND_MESSAGE]
 ;
+
+stock PlayerBind:Bind_Create(playerid, const string:name[], E_BIND_TYPE:type, const string:action[])
+{
+    new PlayerBind:slot = PlayerBind:_Bind_FindFreeSlot(playerid);
+
+    if (slot == INVALID_BIND_ID)
+        return INVALID_BIND_ID;
+    
+    g_sBindOccupied[playerid][slot] = true;
+    g_sBindType[playerid][slot] = type;
+
+    strcopy(g_sBindName[playerid][slot], action, MAX_BIND_MESSAGE);
+    strcopy(g_sBindAction[playerid][slot], action, MAX_BIND_MESSAGE);
+
+    // Just to make sure if some scripter/player forgot to put `/`
+    if (type == BIND_TYPE_COMMAND && action[0] != '/')
+        strins(g_sBindAction[playerid][slot], "/", 0, MAX_BIND_MESSAGE);
+
+    return slot;
+}
 
 stock void:Bind_GetSlots(playerid, PlayerBind:output[MAX_BIND])
 {
@@ -66,6 +88,15 @@ stock void:Bind_GetSlots(playerid, PlayerBind:output[MAX_BIND])
         if (g_sBindOccupied[playerid][i])
             output[slotCount++] = i; // Store at the previous count, then update the count.
     }
+}
+
+stock bool:Bind_GetName(playerid, PlayerBind:slot, string:output[], len = sizeof(output))
+{
+    if (!g_sBindOccupied[playerid][slot])
+        return false;
+
+    strcopy(output, g_sBindName[playerid][slot], len);
+    return true;
 }
 
 stock bool:Bind_GetAction(playerid, PlayerBind:slot, string:output[], len = sizeof(output))
@@ -98,23 +129,10 @@ stock bool:Bind_SetAction(playerid, PlayerBind:slot, const string:action[])
     return true;
 }
 
-stock PlayerBind:Bind_Create(playerid, E_BIND_TYPE:type, const string:action[])
+stock bool:Bind_SetKeys(playerid, PlayerBind:slot, keys)
 {
-    new PlayerBind:slot = PlayerBind:_Bind_FindFreeSlot(playerid);
-
-    if (slot == INVALID_BIND_ID)
-        return INVALID_BIND_ID;
-    
-    g_sBindOccupied[playerid][slot] = true;
-    g_sBindType[playerid][slot] = type;
-
-    strcopy(g_sBindAction[playerid][slot], action, MAX_BIND_MESSAGE);
-
-    // Just to make sure if some scripter/player forgot to put `/`
-    if (type == BIND_TYPE_COMMAND && action[0] != '/')
-        strins(g_sBindAction[playerid][slot], "/", 0, MAX_BIND_MESSAGE);
-
-    return slot;
+    g_sBindKeys[playerid][slot] = keys;
+    return true;
 }
 
 stock bool:Bind_Execute(playerid, PlayerBind:slot)
@@ -130,8 +148,9 @@ stock bool:Bind_Remove(playerid, PlayerBind:slot)
 {
     g_sBindOccupied[playerid][slot] = false;
     g_sBindType[playerid][slot] = BIND_TYPE_NONE;
-    g_sBindAction[playerid][slot][0] = EOS;
 
+    g_sBindKeys[playerid][slot] = 0;
+    g_sBindAction[playerid][slot][0] = EOS;
     return true;
 }
 
@@ -166,3 +185,35 @@ static stock void:_Bind_ReProcess(playerid, PlayerBind:slot)
         }
     }
 }
+
+public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
+{
+    for (new PlayerBind:i; i < PlayerBind:MAX_BIND; i ++)
+    {
+        new bindKeys = g_sBindKeys[playerid][i];
+        if ((newkeys & bindKeys) && !(oldkeys & bindKeys))
+        {
+            CallLocalFunction(#Bind_OnPressed, "iis", playerid, _:i, g_sBindAction[playerid][i]);
+            Bind_Execute(playerid, i);
+            break;
+        }
+    }
+
+    #if defined Ks_OnPlayerKeyStateChange
+        return Ks_OnPlayerKeyStateChange(playerid, newkeys, oldkeys);
+    #else
+        return 1;
+    #endif
+}
+
+
+#if defined _ALS_OnPlayerKeyStateChange
+    #undef OnPlayerKeyStateChange
+#else
+    #define _ALS_OnPlayerKeyStateChange
+#endif
+
+#define OnPlayerKeyStateChange Ks_OnPlayerKeyStateChange
+#if defined Ks_OnPlayerKeyStateChange
+    forward Ks_OnPlayerKeyStateChange(playerid, newkeys, oldkeys);
+#endif
