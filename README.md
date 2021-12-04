@@ -39,7 +39,7 @@ forward Bind_GetKeys(playerid, PlayerBind:slot);
 forward bool:Bind_SetKeys(playerid, PlayerBind:slot, keys);
 
 forward bool:Bind_GetAction(playerid, PlayerBind:slot, string:output[], len = sizeof(output));
-forward bool:Bind_SetAction(playerid, PlayerBind:slot, const string:action[])
+forward bool:Bind_SetAction(playerid, PlayerBind:slot, const string:action[]);
 
 // Core function
 forward PlayerBind:Bind_Create(playerid, E_BIND_TYPE:type, const string:action[]);
