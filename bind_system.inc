@@ -47,6 +47,7 @@
 
 // Use this to make your own custom modification etc etc.
 forward Bind_OnCustomExecuted(playerid, PlayerBind:slot, const string:action[]);
+forward Bind_OnKeyPressed(playerid, PlayerBind:slot, const string:action[]);
 
 enum E_BIND_TYPE
 {
@@ -190,7 +191,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
         new bindKeys = g_sBindKeys[playerid][i];
         if ((newkeys & bindKeys) && !(oldkeys & bindKeys))
         {
-            CallLocalFunction(#Bind_OnPressed, "iis", playerid, _:i, g_sBindAction[playerid][i]);
+            CallLocalFunction(#Bind_OnKeyPressed, "iis", playerid, _:i, g_sBindAction[playerid][i]);
             Bind_Execute(playerid, i);
             break;
         }
