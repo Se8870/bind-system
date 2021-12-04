@@ -134,6 +134,11 @@ stock bool:Bind_SetAction(playerid, PlayerBind:slot, const string:action[])
     return true;
 }
 
+stock Bind_GetKeys(playerid, PlayerBind:slot)
+{
+    return g_sBindKeys[playerid][slot];
+}
+
 stock bool:Bind_SetKeys(playerid, PlayerBind:slot, keys)
 {
     g_sBindKeys[playerid][slot] = keys;
