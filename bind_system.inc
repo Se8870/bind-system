@@ -203,7 +203,6 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
     #endif
 }
 
-
 #if defined _ALS_OnPlayerKeyStateChange
     #undef OnPlayerKeyStateChange
 #else
