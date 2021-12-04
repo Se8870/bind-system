@@ -3,5 +3,5 @@
 // To update the version number for a new release, run "sampctl package release"
 
 #define BIND_SYSTEM_VERSION_MAJOR (1)
-#define BIND_SYSTEM_VERSION_MINOR (0)
-#define BIND_SYSTEM_VERSION_PATCH (7)
+#define BIND_SYSTEM_VERSION_MINOR (1)
+#define BIND_SYSTEM_VERSION_PATCH (0)
