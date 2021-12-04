@@ -99,12 +99,9 @@ stock bool:Bind_GetName(playerid, PlayerBind:slot, string:output[], len = sizeof
     return true;
 }
 
-stock bool:Bind_GetAction(playerid, PlayerBind:slot, string:output[], len = sizeof(output))
+stock bool:Bind_SetName(playerid, PlayerBind:slot, const string:name[])
 {
-    if (!g_sBindOccupied[playerid][slot])
-        return false;
-
-    strcopy(output, g_sBindAction[playerid][slot], len);
+    strcopy(g_sBindName[playerid][slot], action, MAX_BIND_MESSAGE);
     return true;
 }
 
@@ -122,9 +119,17 @@ stock bool:Bind_SetType(playerid, PlaerBind:slot, E_BIND_TYPE:type)
     return 1;
 }
 
+stock bool:Bind_GetAction(playerid, PlayerBind:slot, string:output[], len = sizeof(output))
+{
+    if (!g_sBindOccupied[playerid][slot])
+        return false;
+
+    strcopy(output, g_sBindAction[playerid][slot], len);
+    return true;
+}
+
 stock bool:Bind_SetAction(playerid, PlayerBind:slot, const string:action[])
 {
-    g_sBindAction[playerid][slot][0] = EOS;
     strcopy(g_sBindAction[playerid][slot], action, MAX_BIND_MESSAGE);
     return true;
 }
