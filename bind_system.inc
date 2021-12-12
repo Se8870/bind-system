@@ -29,7 +29,7 @@
     #define MAX_BIND_MESSAGE        144
 #endif
 
-#if !defined NO_PLAYER_BIND_TAG
+#if defined NO_PLAYER_BIND_TAG
     #define PlayerBind: 
 #endif
 
