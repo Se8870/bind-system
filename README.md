@@ -9,7 +9,7 @@ Simple bind system with several types, making it more dynamic and easy to use.
 Simply install to your project:
 
 ```bash
-sampctl package install Kirima2nd/bind-system
+sampctl package install Se8870/bind-system
 ```
 
 Include in your code and begin using the library:
